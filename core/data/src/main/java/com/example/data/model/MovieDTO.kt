@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class MovieDTO(
     val page: Int,
-    val movieItems: List<MovieItem>,
+    @SerializedName("results") val movieItems: List<MovieItem>,
     @SerializedName("total_pages") val totalPages: Int,
     @SerializedName("total_results") val totalResults: Int
 )

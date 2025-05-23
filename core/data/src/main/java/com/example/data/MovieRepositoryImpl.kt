@@ -2,12 +2,12 @@ package com.example.data
 
 import com.example.data.model.MovieDTO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
+import javax.inject.Inject
 
-class MovieRepositoryImpl(
+class MovieRepositoryImpl @Inject constructor(
     private val movieDbApi: TheMovieDbApi
 ) : MovieRepository {
 
@@ -20,11 +20,7 @@ class MovieRepositoryImpl(
     private fun <T> apiCallService(
         apiCall: suspend () -> Response<T>,
     ): Flow<Result<T>> = flow {
-        try {
-            emitAll(getResult(apiCall.invoke()))
-        } catch (exception: Exception) {
-            emitAll(getException(exception))
-        }
+        emitAll(getResult(apiCall.invoke()))
     }
 
     private fun <T> getResult(
@@ -37,29 +33,13 @@ class MovieRepositoryImpl(
                 emit(
                     Result.Failure(
                         message = response.run { message() },
-                        errorCode = -1,
+                        errorCode = -111,
                     )
                 )
             }
-        }.catch { throwable ->
-                emit(
-                    Result.Failure(
-                        message = throwable.message,
-                        errorCode = -1,
-                    )
-                )
-            }
-    }
-
-    private fun <T> getException(
-        exception: Exception,
-    ): Flow<Result<T>> {
-        return flow {
-            emit(
-                Result.Failure(message = exception.message, errorCode = -1)
-            )
         }
     }
+
 }
 
 sealed class Result<out T> {

@@ -2,19 +2,19 @@ package com.example.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.data.MovieRepositoryImpl
+import com.example.data.MovieRepository
 import com.example.data.Result
 import com.example.data.model.MovieItem
 import kotlinx.coroutines.flow.first
 
 class MoviePagingSource(
-  private val repository: MovieRepositoryImpl,
+  private val repository: MovieRepository,
   private val searchedQuery: String
 ) : PagingSource<Int, MovieItem>() {
 
   override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieItem> {
     return try {
-      val page = params.key ?: 0
+      val page = params.key ?: 1
       val response = repository.searchMovies(searchedQuery,page)
       when (val result = response.first()) {
         is Result.Success -> {
