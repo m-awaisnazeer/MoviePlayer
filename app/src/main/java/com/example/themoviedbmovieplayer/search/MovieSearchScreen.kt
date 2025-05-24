@@ -1,11 +1,11 @@
 package com.example.themoviedbmovieplayer.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,7 +26,11 @@ import com.example.data.model.MovieItem
 import java.util.Locale
 
 @Composable
-fun MovieSearchScreen(modifier: Modifier = Modifier, searchViewModel: SearchViewModel) {
+fun MovieSearchScreen(
+    modifier: Modifier = Modifier,
+    searchViewModel: SearchViewModel,
+    onMovieClick: (MovieItem) -> Unit
+) {
     val searchQuery = rememberSaveable { mutableStateOf("") }
     val movies = searchViewModel.moviesPagingData.collectAsLazyPagingItems()
 
@@ -73,7 +77,9 @@ fun MovieSearchScreen(modifier: Modifier = Modifier, searchViewModel: SearchView
                                     )
                                     is MovieListItem.Movie -> Text(
                                         text = item.data.name?:item.data.title.toString(),
-                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).clickable {
+                                            onMovieClick(item.data)
+                                        }
                                     )
                                 }
                             }

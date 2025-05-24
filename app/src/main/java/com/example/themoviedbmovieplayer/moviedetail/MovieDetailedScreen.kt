@@ -33,14 +33,11 @@ import coil.request.ImageRequest
 import com.example.data.model.MovieItem
 
 @Composable
-fun MovieDetailScreen() {
-    val movie = remember { mutableStateOf<MovieItem?>(null) }
+fun MovieDetailScreen(movie: MovieItem, onPlayClick: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(), floatingActionButton = {
-            if (movie.value?.mediaType?.equals("tv") == true || movie.value?.mediaType == "movie") {
-                PlayButton(onClick = {
-
-                })
+            if (movie?.mediaType?.equals("tv") == true || movie?.mediaType == "movie") {
+                PlayButton(onClick = onPlayClick)
             }
         }) { innerPadding ->
         Column(
@@ -48,44 +45,46 @@ fun MovieDetailScreen() {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            val imageUrl = "https://image.tmdb.org/t/p/w500${movie.posterPath}"
+
             CoilImage(
                 Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-                imageUrl = movie.value?.posterPath.toString()
+                imageUrl = imageUrl
             )
             Text(
-                text = movie.value?.title ?: movie.value?.name ?: "",
+                text = movie?.title ?: movie?.name ?: "",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(16.dp)
             )
             Text(
-                text = movie.value?.overview ?: "",
+                text = movie?.overview ?: "",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp)
             )
             Text(
-                text = "Release Date: ${movie.value?.releaseDate ?: movie.value?.firstAirDate}",
+                text = "Release Date: ${movie?.releaseDate ?: movie?.firstAirDate}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp)
             )
             Text(
-                text = "Rating: ${movie.value?.voteAverage ?: 0.0}",
+                text = "Rating: ${movie?.voteAverage ?: 0.0}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp)
             )
             Text(
-                text = "Popularity: ${movie.value?.popularity ?: 0.0}",
+                text = "Popularity: ${movie?.popularity ?: 0.0}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp)
             )
             Text(
-                text = "Vote Count: ${movie.value?.voteCount ?: 0}",
+                text = "Vote Count: ${movie?.voteCount ?: 0}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp)
             )
             Text(
-                text = "Original Language: ${movie.value?.originalLanguage ?: ""}",
+                text = "Original Language: ${movie?.originalLanguage ?: ""}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp)
             )
@@ -107,8 +106,7 @@ fun PlayButton(
                     colors = listOf(Color(0xFF1E88E5), Color(0xFF42A5F5))
                 )
             )
-            .clickable(onClick = onClick)
-            .shadow(8.dp, shape = CircleShape),
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Icon(
