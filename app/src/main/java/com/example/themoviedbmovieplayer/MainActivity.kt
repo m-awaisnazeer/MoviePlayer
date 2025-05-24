@@ -10,21 +10,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.themoviedbmovieplayer.search.MovieSearchScreen
+import com.example.themoviedbmovieplayer.movieplayer.MoviePlayerScreen
 import com.example.themoviedbmovieplayer.search.SearchViewModel
 import com.example.themoviedbmovieplayer.ui.theme.MoviePlayerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MoviePlayerTheme {
-                MovieSearchScreen(modifier = Modifier.fillMaxSize(), searchViewModel = viewModel)
+                MoviePlayerScreen(Modifier.fillMaxSize())
             }
         }
     }
