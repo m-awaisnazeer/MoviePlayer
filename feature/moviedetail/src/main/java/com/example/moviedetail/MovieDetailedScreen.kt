@@ -1,4 +1,4 @@
-package com.example.themoviedbmovieplayer.moviedetail
+package com.example.moviedetail
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +16,7 @@ import com.example.ui.MovieImage
 import com.example.ui.PlayButton
 
 @Composable
-fun MovieDetailScreen(movie: com.example.domain.model.Movie, onPlayClick: () -> Unit) {
+fun MovieDetailScreen(movie: Movie, onPlayClick: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(), floatingActionButton = {
             if (movie.mediaType == "tv" || movie.mediaType == "movie") {

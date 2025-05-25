@@ -1,4 +1,4 @@
-package com.example.themoviedbmovieplayer.movieplayer
+package com.example.movieplayer
 
 import android.annotation.SuppressLint
 import android.app.Activity

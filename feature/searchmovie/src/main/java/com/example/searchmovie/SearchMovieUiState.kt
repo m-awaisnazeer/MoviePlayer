@@ -1,6 +1,4 @@
-package com.example.themoviedbmovieplayer.search
-
-import com.example.domain.model.Movie
+package com.example.searchmovie
 
 
 sealed class SearchMovieUiState {

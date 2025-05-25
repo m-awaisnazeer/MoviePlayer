@@ -45,6 +45,11 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":core:data"))
+    implementation(project(":core:domain"))
+
+    implementation(project(":feature:moviedetail"))
+    implementation(project(":feature:movieplayer"))
+    implementation(project(":feature:searchmovie"))
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
 

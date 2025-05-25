@@ -1,8 +1,7 @@
-package com.example.themoviedbmovieplayer.search
+package com.example.searchmovie
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.repository.MovieRepository
 import com.example.domain.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +44,7 @@ class SearchViewModel @Inject constructor(
 
                     is com.example.utils.Result.Success<List<com.example.domain.model.Movie>> -> {
                         _state.value =
-                            SearchMovieUiState.Success(state.data as List<com.example.domain.model.Movie>)
+                            SearchMovieUiState.Success(state.data as List<Movie>)
                     }
                 }
             }

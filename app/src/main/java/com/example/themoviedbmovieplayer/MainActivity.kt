@@ -14,18 +14,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.domain.model.Movie
-import com.example.themoviedbmovieplayer.moviedetail.MovieDetailScreen
-import com.example.themoviedbmovieplayer.movieplayer.MoviePlayerScreen
+import com.example.moviedetail.MovieDetailScreen
+import com.example.movieplayer.MoviePlayerScreen
 import com.example.themoviedbmovieplayer.routes.Screen
-import com.example.themoviedbmovieplayer.search.MovieSearchScreen
-import com.example.themoviedbmovieplayer.search.SearchViewModel
+import com.example.searchmovie.MovieSearchScreen
+import com.example.searchmovie.SearchViewModel
 import com.example.themoviedbmovieplayer.ui.theme.MoviePlayerTheme
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: com.example.searchmovie.SearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     startDestination = Screen.Search.route
                 ) {
                     composable(Screen.Search.route) {
-                        MovieSearchScreen(
+                        com.example.searchmovie.MovieSearchScreen(
                             searchViewModel = viewModel,
                             onMovieClick = { movieItem ->
                                 val movieJson = Uri.encode(Gson().toJson(movieItem))
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                         val movieJson = backStackEntry.arguments?.getString("movieJson")
                         val movieItem = Gson().fromJson(movieJson, com.example.domain.model.Movie::class.java)
 
-                        MovieDetailScreen(
+                        com.example.moviedetail.MovieDetailScreen(
                             movie = movieItem,
                             onPlayClick = {
                                 navController.navigate(Screen.Player.route)
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable(Screen.Player.route) {
-                        MoviePlayerScreen(Modifier.fillMaxSize())
+                        com.example.movieplayer.MoviePlayerScreen(Modifier.fillMaxSize())
                     }
                 }
             }
