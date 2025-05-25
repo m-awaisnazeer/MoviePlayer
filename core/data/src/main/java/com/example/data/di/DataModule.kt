@@ -6,6 +6,7 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.data.MovieRepository
 import com.example.data.MovieRepositoryImpl
 import com.example.data.TheMovieDbApi
+import com.example.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +39,7 @@ object DataModule {
     fun bindApi(client: OkHttpClient) = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .client(client)
-        .baseUrl("https://api.themoviedb.org/3/")
+        .baseUrl(BASE_URL)
         .build().create(TheMovieDbApi::class.java)
 
     @Singleton

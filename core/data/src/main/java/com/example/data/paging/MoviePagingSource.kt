@@ -3,8 +3,8 @@ package com.example.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.data.MovieRepository
-import com.example.data.Result
 import com.example.data.model.MovieItem
+import com.example.utils.Result
 import kotlinx.coroutines.flow.first
 
 class MoviePagingSource(

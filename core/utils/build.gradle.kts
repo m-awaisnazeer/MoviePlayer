@@ -1,11 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    kotlin("kapt")
 }
 
 android {
-    namespace = "com.example.data"
+    namespace = "com.example.utils"
     compileSdk = 35
 
     defaultConfig {
@@ -34,24 +33,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:utils"))
-
-    implementation(libs.gson)
-    implementation(libs.retrofit)
-    implementation(libs.okhttp)
-    implementation(libs.converter.gson)
-    implementation(libs.paging.runtime)
-
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    debugImplementation(libs.chucker.library)
-    releaseImplementation(libs.chucker.library.no.op)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

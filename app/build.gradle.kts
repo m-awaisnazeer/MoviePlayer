@@ -43,7 +43,6 @@ android {
 
 dependencies {
     implementation(project(":core:ui"))
-
     implementation(project(":core:data"))
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)

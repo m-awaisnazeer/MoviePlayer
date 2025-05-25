@@ -1,6 +1,7 @@
 package com.example.data
 
 import com.example.data.model.MovieDTO
+import com.example.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -42,10 +43,4 @@ class MovieRepositoryImpl @Inject constructor(
 
 }
 
-sealed class Result<out T> {
-    data class Success<T>(var data: T?, var responseCode: Int) : Result<T>()
-    data class Failure<T>(
-        var message: String?,
-        var errorCode: Int?,
-    ) : Result<T>()
-}
+
