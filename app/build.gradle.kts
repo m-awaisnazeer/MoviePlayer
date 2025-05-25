@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:ui"))
 
     implementation(project(":core:data"))
     implementation(libs.paging.runtime)
@@ -49,11 +50,9 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation(libs.coil.compose)
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.ui)
-    implementation("androidx.navigation:navigation-compose:2.7.5")
-    implementation("com.google.code.gson:gson:2.10.1")
+
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.gson.v2101)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
