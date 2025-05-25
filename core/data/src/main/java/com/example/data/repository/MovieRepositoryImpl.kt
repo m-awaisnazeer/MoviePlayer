@@ -1,7 +1,9 @@
-package com.example.data
+package com.example.data.repository
 
-import com.example.data.model.Movie
-import com.example.data.model.MovieItem
+import com.example.data.TheMovieDbApi
+import com.example.data.mapper.toDomainMovie
+import com.example.domain.model.Movie
+import com.example.domain.repository.MovieRepository
 import com.example.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -39,21 +41,6 @@ class MovieRepositoryImpl @Inject constructor(
     }
 }
 
-fun MovieItem.toDomainMovie() = Movie(
-    backdropPath = backdropPath.toString(),
-    mediaType = mediaType.toString(),
-    name = name,
-    originalLanguage = originalLanguage.toString(),
-    originalName = originalName.toString(),
-    originalTitle = originalName.toString(),
-    overview = overview.toString(),
-    popularity = popularity ?: 0.0,
-    posterPath = posterPath,
-    releaseDate = releaseDate.toString(),
-    title = title,
-    voteAverage = voteAverage ?: 0.0,
-    voteCount = voteCount ?: 0
 
-)
 
 

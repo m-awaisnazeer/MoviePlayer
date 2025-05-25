@@ -11,12 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.data.model.Movie
+import com.example.domain.model.Movie
 import com.example.ui.MovieImage
 import com.example.ui.PlayButton
 
 @Composable
-fun MovieDetailScreen(movie: Movie, onPlayClick: () -> Unit) {
+fun MovieDetailScreen(movie: com.example.domain.model.Movie, onPlayClick: () -> Unit) {
     Scaffold(
         modifier = Modifier.fillMaxSize(), floatingActionButton = {
             if (movie.mediaType == "tv" || movie.mediaType == "movie") {

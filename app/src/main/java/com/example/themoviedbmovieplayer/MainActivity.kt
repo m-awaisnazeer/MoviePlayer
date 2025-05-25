@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.data.model.Movie
+import com.example.domain.model.Movie
 import com.example.themoviedbmovieplayer.moviedetail.MovieDetailScreen
 import com.example.themoviedbmovieplayer.movieplayer.MoviePlayerScreen
 import com.example.themoviedbmovieplayer.routes.Screen
@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                         arguments = listOf(navArgument("movieJson") { type = NavType.StringType })
                     ) { backStackEntry ->
                         val movieJson = backStackEntry.arguments?.getString("movieJson")
-                        val movieItem = Gson().fromJson(movieJson, Movie::class.java)
+                        val movieItem = Gson().fromJson(movieJson, com.example.domain.model.Movie::class.java)
 
                         MovieDetailScreen(
                             movie = movieItem,

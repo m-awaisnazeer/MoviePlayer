@@ -2,8 +2,8 @@ package com.example.themoviedbmovieplayer.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.data.MovieRepository
-import com.example.data.model.Movie
+import com.example.domain.repository.MovieRepository
+import com.example.domain.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: MovieRepository
+    private val repository: com.example.domain.repository.MovieRepository
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SearchMovieUiState> =
@@ -43,9 +43,9 @@ class SearchViewModel @Inject constructor(
                             SearchMovieUiState.Error(state.message ?: "Some Error Occurred")
                     }
 
-                    is com.example.utils.Result.Success<List<Movie>> -> {
+                    is com.example.utils.Result.Success<List<com.example.domain.model.Movie>> -> {
                         _state.value =
-                            SearchMovieUiState.Success(state.data as List<Movie>)
+                            SearchMovieUiState.Success(state.data as List<com.example.domain.model.Movie>)
                     }
                 }
             }

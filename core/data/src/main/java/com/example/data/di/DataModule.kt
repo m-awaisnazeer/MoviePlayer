@@ -3,8 +3,7 @@ package com.example.data.di
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
-import com.example.data.MovieRepository
-import com.example.data.MovieRepositoryImpl
+import com.example.data.repository.MovieRepositoryImpl
 import com.example.data.TheMovieDbApi
 import com.example.utils.Constants.BASE_URL
 import dagger.Module
@@ -46,7 +45,7 @@ object DataModule {
     @Provides
     fun provideMoviesRepository(
         movieDbApi: TheMovieDbApi
-    ): MovieRepository {
+    ): com.example.domain.repository.MovieRepository {
         return MovieRepositoryImpl(movieDbApi)
     }
 }
