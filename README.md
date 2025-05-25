@@ -17,16 +17,16 @@ This project follows **multi-module clean architecture**, which offers:
 
 ## 📂 Project Structure
 
-├── app/ # Main application module (entry point)
-├── core/
-│ ├── data/ # Implements data sources and repository logic
-│ ├── domain/ # Defines domain models and repository interfaces
-│ ├── ui/ # Reusable Jetpack Compose UI components
-│ └── utils/ # Common utility classes and extensions
-├── feature/
-│ ├── moviedetail/ # Displays selected movie details
-│ ├── movieplayer/ # Video player for playing trailers/clips
-│ └── searchmovie/ # Functionality to search and list movies
+-├── app/ # Main application module (entry point)
+-├── core/
+-│ ├── data/ # Implements data sources and repository logic
+-│ ├── domain/ # Defines domain models and repository interfaces
+-│ ├── ui/ # Reusable Jetpack Compose UI components
+-│ └── utils/ # Common utility classes and extensions
+-├── feature/
+-│ ├── moviedetail/ # Displays selected movie details
+-│ ├── movieplayer/ # Video player for playing trailers/clips
+-│ └── searchmovie/ # Functionality to search and list movies
 
 
 
