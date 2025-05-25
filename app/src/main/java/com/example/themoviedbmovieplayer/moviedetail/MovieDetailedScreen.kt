@@ -32,7 +32,7 @@ fun MovieDetailScreen(movie: MovieItem, onPlayClick: () -> Unit) {
                 Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-                posterPath = movie.posterPath
+                posterPath = movie.posterPath.toString()
             )
             Text(
                 text = movie.title ?: movie.name ?: "",
