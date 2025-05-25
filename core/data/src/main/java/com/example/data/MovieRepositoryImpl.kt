@@ -1,35 +1,25 @@
 package com.example.data
 
-import com.example.data.model.MovieDTO
+import com.example.data.model.Movie
+import com.example.data.model.MovieItem
 import com.example.utils.Result
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
-import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     private val movieDbApi: TheMovieDbApi
 ) : MovieRepository {
 
-    override suspend fun searchMovies(query: String, page: Int): Flow<Result<MovieDTO>> {
-        return apiCallService {
-            movieDbApi.searchMovies(query = query, page = page)
-        }
-    }
-
-    private fun <T> apiCallService(
-        apiCall: suspend () -> Response<T>,
-    ): Flow<Result<T>> = flow {
-        emitAll(getResult(apiCall.invoke()))
-    }
-
-    private fun <T> getResult(
-        response: Response<T>,
-    ): Flow<Result<T>> {
-        return flow {
+    override suspend fun searchMovies(query: String, page: Int): Flow<Result<List<Movie>>> = flow {
+        try {
+            val response = movieDbApi.searchMovies(query = query, page = page)
             if (response.isSuccessful) {
-                emit(Result.Success(data = response.body(), responseCode = response.code()))
+                response.body()?.movieItems?.let { movieItems ->
+                    val movies: List<Movie> = movieItems.map { it.toDomainMovie() }
+                    emit(Result.Success(movies, 200))
+                }
             } else {
                 emit(
                     Result.Failure(
@@ -38,9 +28,32 @@ class MovieRepositoryImpl @Inject constructor(
                     )
                 )
             }
+
+        } catch (e: IOException) {
+            emit(
+                Result.Failure(
+                    message = e.message ?: "Network connection Error", errorCode = -100
+                )
+            )
         }
     }
-
 }
+
+fun MovieItem.toDomainMovie() = Movie(
+    backdropPath = backdropPath.toString(),
+    mediaType = mediaType.toString(),
+    name = name,
+    originalLanguage = originalLanguage.toString(),
+    originalName = originalName.toString(),
+    originalTitle = originalName.toString(),
+    overview = overview.toString(),
+    popularity = popularity ?: 0.0,
+    posterPath = posterPath,
+    releaseDate = releaseDate.toString(),
+    title = title,
+    voteAverage = voteAverage ?: 0.0,
+    voteCount = voteCount ?: 0
+
+)
 
 

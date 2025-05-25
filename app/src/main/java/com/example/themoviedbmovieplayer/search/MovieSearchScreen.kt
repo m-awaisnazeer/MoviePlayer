@@ -3,6 +3,7 @@ package com.example.themoviedbmovieplayer.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,16 +21,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.data.model.MovieItem
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.data.model.Movie
 import com.example.ui.MovieImage
 import com.example.ui.R
 import java.util.Locale
@@ -37,16 +39,10 @@ import java.util.Locale
 @Composable
 fun MovieSearchScreen(
     modifier: Modifier = Modifier,
-    searchViewModel: SearchViewModel,
-    onMovieClick: (MovieItem) -> Unit
+    searchViewModel: SearchViewModel, onMovieClick: (Movie) -> Unit
 ) {
     val searchQuery = rememberSaveable { mutableStateOf("") }
-    val movies = searchViewModel.moviesPagingData.collectAsLazyPagingItems()
-
-    val sectionedItems = remember(movies.itemSnapshotList.items) {
-        movies.itemSnapshotList.items
-            .groupBy { it.mediaType.capitalize(Locale.getDefault()) }
-    }
+    val state: SearchMovieUiState by searchViewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
@@ -54,66 +50,96 @@ fun MovieSearchScreen(
                 value = searchQuery.value,
                 onValueChange = {
                     searchQuery.value = it
-                    searchViewModel.searchMovies(it)
+                    searchViewModel.updateQuery(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Search Movies") }
             )
+            when (state) {
+                is SearchMovieUiState.Error -> {
+                    Text("Error: ${(state as SearchMovieUiState.Error).message}")
 
-            when (val state = movies.loadState.refresh) {
-                is LoadState.Loading -> {
-                    CircularProgressIndicator()
                 }
-                is LoadState.NotLoading -> {
-                    if (movies.itemCount == 0) {
-                        Text("No movies found")
-                    } else {
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
-                            sectionedItems.forEach { (title, movies) ->
-                                item {
-                                    Text(
-                                        text = title,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .background(Color.LightGray)
-                                            .padding(8.dp)
-                                    )
-                                    LazyRow(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(horizontal = 16.dp)
 
-                                    ) {
-                                        items(movies) { movie ->
-                                            MovieItem(
-                                                modifier = Modifier
-                                                    .padding(8.dp)
-                                                    .width(120.dp)
-                                                    .height(170.dp)
-                                                    .clickable {
-                                                        onMovieClick(movie)
-                                                    }, movie
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                SearchMovieUiState.Initial -> {
 
+                }
+
+                SearchMovieUiState.Loading -> {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
-                is LoadState.Error -> {
-                    Text("Error: ${state.error.message}")
+
+                SearchMovieUiState.NoResultFound -> {
+
                 }
 
+                is SearchMovieUiState.Success -> {
+                    MoviesContent(
+                        Modifier, (state as SearchMovieUiState.Success).data, onMovieClick
+                    )
+                }
             }
+
         }
+
+
     }
 }
 
 @Composable
-fun MovieItem(modifier: Modifier = Modifier, movie: MovieItem) {
+fun MoviesContent(
+    modifier: Modifier = Modifier, movies: List<Movie>, onMovieClick: (Movie) -> Unit
+) {
+
+    if (movies.isEmpty()) {
+        Text("No movies found")
+    } else {
+        val sectionedItems = remember(movies.size) {
+            movies.groupBy { it.mediaType.capitalize(Locale.getDefault()) }
+        }
+
+        LazyColumn(modifier = modifier.fillMaxSize()) {
+            sectionedItems.forEach { (title, movies) ->
+                item {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xD3EEEEEE))
+                            .padding(8.dp)
+                    )
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+
+                    ) {
+                        items(movies) { movie ->
+                            MovieItem(
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .width(120.dp)
+                                    .height(170.dp)
+                                    .clickable {
+                                        onMovieClick(movie)
+                                    }, movie
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+@Composable
+fun MovieItem(modifier: Modifier = Modifier, movie: Movie) {
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -137,5 +163,4 @@ fun MovieItem(modifier: Modifier = Modifier, movie: MovieItem) {
             Text(modifier = Modifier.padding(6.dp), text = movie.title ?: movie.name ?: "")
         }
     }
-
 }

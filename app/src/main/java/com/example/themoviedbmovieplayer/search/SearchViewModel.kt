@@ -1,21 +1,15 @@
 package com.example.themoviedbmovieplayer.search
 
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagingData
-import com.example.data.MovieRepository
-import com.example.data.model.MovieItem
-import com.example.data.paging.MoviePagingSource
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
+import com.example.data.MovieRepository
+import com.example.data.model.Movie
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,26 +17,38 @@ class SearchViewModel @Inject constructor(
     private val repository: MovieRepository
 ) : ViewModel() {
 
-    fun searchMovies(searchedQuery: String) {
-        this.searchedQuery.value = searchedQuery
-    }
+    private val _state: MutableStateFlow<SearchMovieUiState> =
+        MutableStateFlow(SearchMovieUiState.Initial)
+    val state: StateFlow<SearchMovieUiState> = _state
 
-    private val searchedQuery = MutableStateFlow<String?>(null)
+    private var job = Job()
+        get() {
+            if (field.isCancelled) field = Job()
+            return field
+        }
 
-    val moviesPagingData: Flow<PagingData<MovieItem>> =
-        searchedQuery
-            .filterNotNull()
-            .debounce(300)
-            .distinctUntilChanged()
-            .flatMapLatest { query ->
-                Pager(
-                    config = PagingConfig(
-                        pageSize = 10,
-                        enablePlaceholders = false,
-                        prefetchDistance = 2
-                    ),
-                    pagingSourceFactory = { MoviePagingSource(repository, query) }
-                ).flow
+    fun updateQuery(newText: String) {
+        job.cancel()
+        _state.value = SearchMovieUiState.Loading
+        if (newText.isEmpty()) {
+            _state.value = SearchMovieUiState.Initial
+            return
+        }
+        val coroutineContext = job + Dispatchers.IO
+        viewModelScope.launch(coroutineContext) {
+            repository.searchMovies(newText, 1).collect { state ->
+                when (state) {
+                    is com.example.utils.Result.Failure<*> -> {
+                        _state.value =
+                            SearchMovieUiState.Error(state.message ?: "Some Error Occurred")
+                    }
+
+                    is com.example.utils.Result.Success<List<Movie>> -> {
+                        _state.value =
+                            SearchMovieUiState.Success(state.data as List<Movie>)
+                    }
+                }
             }
-            .cachedIn(viewModelScope)
+        }
+    }
 }
