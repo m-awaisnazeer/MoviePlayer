@@ -17,10 +17,6 @@ This project follows **multi-module clean architecture**, which offers:
 
 ## 📂 Project Structure
 
-<pre lang="markdown"> ## 📂 Project Structure ``` ├── app/ # Main application module (entry point) ├── core/ │ ├── data/ # Implements data sources and repository logic │ ├── domain/ # Defines domain models and repository interfaces │ ├── ui/ # Reusable Jetpack Compose UI components │ └── utils/ # Common utility classes and extensions ├── feature/ │ ├── moviedetail/ # Displays selected movie details │ ├── movieplayer/ # Video player for playing trailers/clips │ └── searchmovie/ # Functionality to search and list movies ``` </pre>
-
----
-
 ## 🧠 Core Modules
 
 ### `core:data`
@@ -131,18 +127,7 @@ Handles:
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Android Studio Hedgehog or later
-- Kotlin 1.9+
-- JDK 17
-- Gradle 8+
-
-### Build & Run
-
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/your-username/modular-movie-app.git
-   cd modular-movie-app
+> 📝 **Note:**  
+> Don't consider this structure as over-engineered.  
+> Each feature module is designed with large-scale scalability in mind,  
+> making the entire project more modular, maintainable, and future-proof.
