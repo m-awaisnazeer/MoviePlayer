@@ -3,6 +3,7 @@ package com.example.searchmovie
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.model.Movie
+import com.example.domain.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: com.example.domain.repository.MovieRepository
+    private val repository: MovieRepository
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SearchMovieUiState> =
