@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -62,7 +61,7 @@ fun MovieSearchScreen(
                 }
 
                 SearchMovieUiState.Initial -> {
-
+                    SearchMovieIdleScreen()
                 }
 
                 SearchMovieUiState.Loading -> {
@@ -75,7 +74,7 @@ fun MovieSearchScreen(
                 }
 
                 SearchMovieUiState.NoResultFound -> {
-
+                    SearchNoResultsScreen()
                 }
 
                 is SearchMovieUiState.Success -> {
@@ -95,48 +94,43 @@ fun MovieSearchScreen(
 fun MoviesContent(
     modifier: Modifier = Modifier, movies: List<Movie>, onMovieClick: (Movie) -> Unit
 ) {
+    val sectionedItems = remember(movies.size) {
+        movies.groupBy { it.mediaType.capitalize(Locale.getDefault()) }
+    }
 
-    if (movies.isEmpty()) {
-        Text("No movies found")
-    } else {
-        val sectionedItems = remember(movies.size) {
-            movies.groupBy { it.mediaType.capitalize(Locale.getDefault()) }
-        }
+    LazyColumn(modifier = modifier.fillMaxSize()) {
+        sectionedItems.forEach { (title, movies) ->
+            item {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xD3EEEEEE))
+                        .padding(8.dp)
+                )
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
 
-        LazyColumn(modifier = modifier.fillMaxSize()) {
-            sectionedItems.forEach { (title, movies) ->
-                item {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xD3EEEEEE))
-                            .padding(8.dp)
-                    )
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-
-                    ) {
-                        items(movies) { movie ->
-                            MovieItem(
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .width(120.dp)
-                                    .height(170.dp)
-                                    .clickable {
-                                        onMovieClick(movie)
-                                    }, movie
-                            )
-                        }
+                ) {
+                    items(movies) { movie ->
+                        MovieItem(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .width(120.dp)
+                                .height(170.dp)
+                                .clickable {
+                                    onMovieClick(movie)
+                                }, movie
+                        )
                     }
                 }
             }
         }
-
     }
+
 }
 @Composable
 fun MovieItem(modifier: Modifier = Modifier, movie: Movie) {

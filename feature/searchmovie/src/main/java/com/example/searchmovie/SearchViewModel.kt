@@ -42,9 +42,11 @@ class SearchViewModel @Inject constructor(
                             SearchMovieUiState.Error(state.message ?: "Some Error Occurred")
                     }
 
-                    is com.example.utils.Result.Success<List<com.example.domain.model.Movie>> -> {
-                        _state.value =
-                            SearchMovieUiState.Success(state.data as List<Movie>)
+                    is com.example.utils.Result.Success<List<Movie>> -> {
+                        val data = state.data as List<Movie>
+                        if (data.isEmpty()) _state.value = SearchMovieUiState.NoResultFound
+                        else
+                        _state.value = SearchMovieUiState.Success(data)
                     }
                 }
             }
